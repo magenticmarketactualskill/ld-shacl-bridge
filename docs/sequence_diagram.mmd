@@ -1,0 +1,38 @@
+sequenceDiagram
+    participant User
+    participant SinatraApp
+    participant JsonLdConverter
+    participant ShaclGenerator
+    participant Database
+
+    User->>SinatraApp: PUT /convert (JSON, Headers: Context, Id)
+    
+    SinatraApp->>SinatraApp: Validate headers
+    
+    alt Headers valid
+        SinatraApp->>SinatraApp: Parse JSON body
+        SinatraApp->>JsonLdConverter: convert(json, context_header)
+        JsonLdConverter->>JsonLdConverter: Check if JSON-LD
+        JsonLdConverter-->>SinatraApp: json_ld
+        
+        SinatraApp->>ShaclGenerator: generate(json_ld)
+        ShaclGenerator->>ShaclGenerator: Convert to RDF graph
+        ShaclGenerator->>ShaclGenerator: Analyze properties
+        ShaclGenerator->>ShaclGenerator: Create SHACL NodeShape
+        ShaclGenerator-->>SinatraApp: shacl_shape (Turtle)
+        
+        SinatraApp->>SinatraApp: Generate UUID v7 for SHACL
+        SinatraApp->>Database: Store SHACL shape
+        Database-->>SinatraApp: shacl_record
+        
+        SinatraApp->>Database: Find or create Frame
+        Database-->>SinatraApp: frame_record
+        
+        SinatraApp->>Database: Create many-to-many relationship
+        Database-->>SinatraApp: frames_shacl_record
+        
+        SinatraApp->>SinatraApp: Build response with new @context and @id
+        SinatraApp-->>User: 200 OK (JSON-LD)
+    else Headers invalid
+        SinatraApp-->>User: 400 Bad Request
+    end

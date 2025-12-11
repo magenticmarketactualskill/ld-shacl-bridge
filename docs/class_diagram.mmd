@@ -1,0 +1,50 @@
+classDiagram
+    class SinatraApp {
+        +PUT /convert()
+        +GET /frame/:id()
+        +GET /shacl/:id()
+        -parse_json_body()
+        -get_header(name)
+    }
+    
+    class JsonLdConverter {
+        +convert(json_data, context_url) Hash
+        +json_ld?(json_data) Boolean
+        +to_rdf_graph(json_ld) RDF::Graph
+    }
+    
+    class ShaclGenerator {
+        +generate(json_ld) String
+        -analyze_properties(graph) Hash
+    }
+    
+    class Frame {
+        +Integer id
+        +String frame_id
+        +Text context
+        +DateTime created_at
+        +shacls()
+    }
+    
+    class Shacl {
+        +Integer id
+        +String shacl_id
+        +Text shape
+        +DateTime created_at
+        +frames()
+    }
+    
+    class FramesShacl {
+        +Integer frame_id
+        +Integer shacl_id
+    }
+    
+    SinatraApp ..> JsonLdConverter : uses
+    SinatraApp ..> ShaclGenerator : uses
+    SinatraApp ..> Frame : manages
+    SinatraApp ..> Shacl : manages
+    SinatraApp ..> FramesShacl : manages
+    
+    Frame "1" --o "many" FramesShacl
+    Shacl "1" --o "many" FramesShacl
+    Frame "many" --o "many" Shacl : through FramesShacl

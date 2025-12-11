@@ -1,0 +1,47 @@
+# Database files
+*.db
+*.sqlite3
+db/*.db
+db/*.sqlite3
+
+# Ruby
+*.gem
+*.rbc
+.bundle
+.config
+coverage
+InstalledFiles
+lib/bundler/man
+pkg
+rdoc
+spec/reports
+test/tmp
+test/version_tmp
+tmp
+.ruby-version
+.ruby-gemset
+
+# RVM
+.rvmrc
+
+# rbenv
+.rbenv-version
+
+# Environment variables
+.env
+.env.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+log/

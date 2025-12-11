@@ -1,0 +1,17 @@
+graph TB
+    User((User))
+    
+    subgraph "ld-shacl-bridge System"
+        UC1[Convert JSON to JSON-LD]
+        UC2[Generate SHACL Shape]
+        UC3[Store Frame and SHACL]
+        UC4[Retrieve Frame]
+        UC5[Retrieve SHACL]
+    end
+    
+    User -->|PUT /convert| UC1
+    User -->|GET /frame/:id| UC4
+    User -->|GET /shacl/:id| UC5
+    
+    UC1 -.->|includes| UC2
+    UC2 -.->|includes| UC3

@@ -1,0 +1,22 @@
+erDiagram
+    FRAMES ||--o{ FRAMES_SHACLS : "has"
+    SHACLS ||--o{ FRAMES_SHACLS : "has"
+    
+    FRAMES {
+        integer id PK
+        string frame_id UK "Unique frame identifier"
+        text context "JSON-LD context URL"
+        datetime created_at
+    }
+    
+    SHACLS {
+        integer id PK
+        string shacl_id UK "UUID v7 identifier"
+        text shape "SHACL shape in Turtle format"
+        datetime created_at
+    }
+    
+    FRAMES_SHACLS {
+        integer frame_id FK
+        integer shacl_id FK
+    }
